@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// THIS IS JUST A TEST
+Route::get('/test', function(Request $request){
+    return 'Success';   
+});
+Route::get('getProfiles', [ProfileController::class, 'getProfiles']);
+
+// THIS IS THE ACTUAL TASK
+Route::post('addProfile', [ProfileController::class, 'addProfile']);
+
