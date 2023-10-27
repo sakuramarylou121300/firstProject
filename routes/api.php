@@ -26,5 +26,5 @@ Route::get('/test', function(Request $request){
 Route::get('getProfiles', [ProfileController::class, 'getProfiles']);
 
 // THIS IS THE ACTUAL TASK
-Route::post('addProfile', [ProfileController::class, 'addProfile']);
+Route::post('citizen/store', [ProfileController::class, 'addProfile']);
 
