@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
-    // THIS IS TO GET DATA
+    // THIS IS TO GET DATA, testing only
     public function getProfiles(){
         $profiles = Profile::all();
         return response()->json($profiles);
@@ -156,22 +156,29 @@ class ProfileController extends Controller
             'avatar' => 'required',
             'info_status' => 'required',
         );
+        
         $validator = Validator::make($request->all(),$rules);
         if($validator->fails()){
             return $validator->errors();
         }else{
-            $profiles = new Profile();
-            $profiles->livelihood_status_id = $request->livelihood_status_id;
-            $profiles->family_income_range_id = $request->family_income_range_id;
-            $profiles->tenurial_status_id = $request->tenurial_status_id;
-            $profiles->kayabe_kard_type_id = $request->kayabe_kard_type_id;
-            $profiles->dependent_range_id = $request->dependent_range_id;
-            $profiles->total_dependents = $request->total_dependents;
-            $profiles->family_vulnerability = $request->family_vulnerability;
-            $profiles->medication = $request->medication;
-            $profiles->remarks = $request->remarks;
-            $profiles->save();
+            // Find the existing profile by ID
+            $profile = Profile::find($id);
 
+            if (!$profile) {
+                return response()->json('Profile not found', 404);
+            }
+
+            // Update the existing profile with the new data
+            $profile->livelihood_status_id = $request->livelihood_status_id;
+            $profile->family_income_range_id = $request->family_income_range_id;
+            $profile->tenurial_status_id = $request->tenurial_status_id;
+            $profile->kayabe_kard_type_id = $request->kayabe_kard_type_id;
+            $profile->dependent_range_id = $request->dependent_range_id;
+            $profile->total_dependents = $request->total_dependents;
+            $profile->family_vulnerability = $request->family_vulnerability;
+            $profile->medication = $request->medication;
+            $profile->remarks = $request->remarks;
+            $profile->save();
         }
 
         // update flood exposure with attach
