@@ -19,6 +19,52 @@ class ProfileController extends Controller
         return response()->json($profiles);
     }
 
+    // get citizen by their pin
+    public function getOneCitizen($pin) {
+        // get citizen first
+        $citizen = Citizen::where('pin', $pin)->first();
+        
+        if (!$citizen) {
+            return response()->json(['error' => 'Citizen not found'], 404);
+        }
+    
+        // now the profile
+        // Use the 'profile' relationship to retrieve the related Profile
+        $profile = $citizen->profiles;
+    
+        if (!$profile) {
+            return response()->json(['error' => 'Profile not found for this Citizen'], 404);
+        }
+    
+        // get profileFloodExposure with profile_id, profileFloodExposure and citizen share the same profile_id
+        $profileFloodExposure = $citizen->profileFloodExposure;
+
+        if ($profileFloodExposure->isEmpty()) {
+            return response()->json(['error' => 'No Flood Exposure records found for this Citizen'], 404);
+        }
+
+        // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
+        $profileHealthCondition = $citizen->profileHealthCondition;
+
+        if ($profileHealthCondition->isEmpty()) {
+            return response()->json(['error' => 'No Health Condition records found for this Citizen'], 404);
+        }
+
+        // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
+        $profileSector = $citizen->profileSectors;
+
+        if ($profileSector->isEmpty()) {
+            return response()->json(['error' => 'No Sector records found for this Citizen'], 404);
+        }
+        if ($profileSector) {
+            return response()->json([
+                'citizen' => $citizen,
+            ]);
+        } else {
+            return response()->json(['error' => 'ProfileFloodExposure not found for this Profile'], 404);
+        }
+    }
+    
     // THIS IS TO STORE DATA
     public function addCitizen(Request $request){
 
