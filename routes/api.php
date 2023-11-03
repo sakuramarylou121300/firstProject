@@ -26,5 +26,6 @@ Route::get('/test', function(Request $request){
 Route::get('getProfiles', [ProfileController::class, 'getProfiles']);
 
 // THIS IS THE ACTUAL TASK
+Route::get('citizen/get/one/{id}', [ProfileController::class, 'getOneCitizen']);
 Route::post('citizen/store', [ProfileController::class, 'addProfile']);
-
+Route::put('citizen/update/{id}', [ProfileController::class, 'updateCitizen']);
