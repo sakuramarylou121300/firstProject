@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// test many to many relationship
+Route::get('/test', function () {
+    $profile = Profile::with('sectors')->first();
+    $profile->sectors()->attach(3);
+    $profile->sectors()->attach(1);
+    $profile = Profile::with('sectors')->first();
+    dd($profile->toArray());
 });
