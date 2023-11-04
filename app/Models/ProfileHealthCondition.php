@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\HealthCondition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,4 +16,9 @@ class ProfileHealthCondition extends Model
 
     // emphasize the table name
     protected $table = 'profile_health_condition';
+
+    // profile flood exposure belongs to table flood exposure
+    public function healthConditions(){
+        return $this->belongsTo(HealthCondition::class, 'health_condition_id');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Sector;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,4 +17,10 @@ class ProfileSector extends Model
     // emphasize the table name
     protected $table = 'profile_sector';
 
+    // profile flood exposure belongs to table flood exposure
+    public function sectors(){
+        return $this->belongsTo(Sector::class, 'sector_id');
+    }
 }
+
+

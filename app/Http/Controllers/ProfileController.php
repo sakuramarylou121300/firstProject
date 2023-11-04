@@ -7,6 +7,8 @@ use App\Models\ProfileFloodExposure;
 use App\Models\ProfileHealthCondition;
 use App\Models\ProfileSector;
 use App\Models\Citizen;
+use App\Http\Resources\ProfileResource;
+use App\Http\Resources\CitizenResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,82 +18,75 @@ class ProfileController extends Controller
     // THIS IS TO GET DATA, testing only
     public function getProfiles(){
         $profiles = Profile::all();
-        return response()->json($profiles);
+        $profiles_resource = ProfileResource::collection($profiles);
+        return response()->json($profiles_resource);
     }
 
-    // get citizen by their pin
     public function getOneCitizen($pin) {
-        // get citizen first
         $citizen = Citizen::where('pin', $pin)->first();
-        
+
         if (!$citizen) {
-            return response()->json(['error' => 'Citizen not found'], 404);
-        }
-    
-        // now the profile
-        // Use the 'profile' relationship to retrieve the related Profile
-        $profile = $citizen->profiles;
-    
-        if (!$profile) {
-            return response()->json(['error' => 'Profile not found for this Citizen'], 404);
-        }
-    
-        // get profileFloodExposure with profile_id, profileFloodExposure and citizen share the same profile_id
-        $profileFloodExposure = $citizen->profileFloodExposure;
-
-        if ($profileFloodExposure->isEmpty()) {
-            return response()->json(['error' => 'No Flood Exposure records found for this Citizen'], 404);
+            return response()->json(['message' => 'Citizen not found.'], 404);
         }
 
-        // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
-        $profileHealthCondition = $citizen->profileHealthCondition;
+        $citizen_resource = new CitizenResource($citizen);
+        // $profileFloodExposure = $citizen->profileFloodExposure;
 
-        if ($profileHealthCondition->isEmpty()) {
-            return response()->json(['error' => 'No Health Condition records found for this Citizen'], 404);
-        }
-
-        // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
-        $profileSector = $citizen->profileSectors;
-
-        if ($profileSector->isEmpty()) {
-            return response()->json(['error' => 'No Sector records found for this Citizen'], 404);
-        }
-        if ($profileSector) {
-            return response()->json([
-                'citizen' => $citizen,
-            ]);
-        } else {
-            return response()->json(['error' => 'ProfileFloodExposure not found for this Profile'], 404);
-        }
+        return response()->json($citizen_resource);
     }
+
+    // // get citizen by their pin
+    // public function getOneCitizen($pin) {
+    //     // get citizen first
+    //     $citizen = Citizen::where('pin', $pin)->first();
+        
+    //     if (!$citizen) {
+    //         return response()->json(['error' => 'Citizen not found'], 404);
+    //     }
+    
+    //     // now the profile
+    //     // Use the 'profile' relationship to retrieve the related Profile
+    //     $profile = $citizen->profiles;
+    
+    //     if (!$profile) {
+    //         return response()->json(['error' => 'Profile not found for this Citizen'], 404);
+    //     }
+    
+    //     // get profileFloodExposure with profile_id, profileFloodExposure and citizen share the same profile_id
+    //     $profileFloodExposure = $citizen->profileFloodExposure;
+
+    //     if ($profileFloodExposure->isEmpty()) {
+    //         return response()->json(['error' => 'No Flood Exposure records found for this Citizen'], 404);
+    //     }
+
+    //     // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
+    //     $profileHealthCondition = $citizen->profileHealthCondition;
+
+    //     if ($profileHealthCondition->isEmpty()) {
+    //         return response()->json(['error' => 'No Health Condition records found for this Citizen'], 404);
+    //     }
+
+    //     // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
+    //     $profileSector = $citizen->profileSectors;
+
+    //     if ($profileSector->isEmpty()) {
+    //         return response()->json(['error' => 'No Sector records found for this Citizen'], 404);
+    //     }
+    //     if ($profileSector) {
+    //         return response()->json([
+    //             'citizen' => $citizen,
+    //         ]);
+    //     } else {
+    //         return response()->json(['error' => 'ProfileFloodExposure not found for this Profile'], 404);
+    //     }
+    // }
     
     // THIS IS TO STORE DATA
     public function addCitizen(Request $request){
 
-        // validation
-        $rules = array(
-            'livelihood_status_id' => 'required|numeric|exists:livelihood_statuses,id',
-            'family_income_range_id' => 'required|numeric|exists:family_income_ranges,id',
-            'tenurial_status_id' => 'required|numeric|exists:livelihood_statuses,id',
-            'kayabe_kard_type_id' => 'required|numeric|exists:kayabe_kard_types,id',
-            'dependent_range_id' => 'required|numeric|exists:dependent_ranges,id',
-            'total_dependents' => 'required|numeric|min:1',
-            'family_vulnerability' => 'required|in:0,1',
-            'medication' => 'required',
-            'remarks' => 'required',
-            'flood_exposure_id' => 'required|exists:flood_exposures,id',
-            'health_condition_id' => 'required|exists:health_conditions,id',
-            'sector_id' => 'required|exists:sectors,id',
-            'forename' => 'required',
-            'surname' => 'required',
-            'birthdate' => 'required',
-            'gender_id' => 'required|exists:genders,id',
-            'vicinity' => 'required',
-            'barangay' => 'required',
-            'avatar' => 'required',
-            'info_status' => 'required',
-        );
-        $validator = Validator::make($request->all(),$rules);
+        // Call the validation function
+         $validator = $this->validateProfileData($request);
+
         if($validator->fails()){
             return $validator->errors();
         }else{
@@ -179,31 +174,8 @@ class ProfileController extends Controller
     // THIS IS TO UPDATE DATA
     public function updateCitizen(Request $request, $id){
 
-        // validation
-        $rules = array(
-            'livelihood_status_id' => 'required|numeric|exists:livelihood_statuses,id',
-            'family_income_range_id' => 'required|numeric|exists:family_income_ranges,id',
-            'tenurial_status_id' => 'required|numeric|exists:livelihood_statuses,id',
-            'kayabe_kard_type_id' => 'required|numeric|exists:kayabe_kard_types,id',
-            'dependent_range_id' => 'required|numeric|exists:dependent_ranges,id',
-            'total_dependents' => 'required|numeric|min:1',
-            'family_vulnerability' => 'required|in:0,1',
-            'medication' => 'required',
-            'remarks' => 'required',
-            'flood_exposure_id' => 'required|exists:flood_exposures,id',
-            'health_condition_id' => 'required|exists:health_conditions,id',
-            'sector_id' => 'required|exists:sectors,id',
-            'forename' => 'required',
-            'surname' => 'required',
-            'birthdate' => 'required',
-            'gender_id' => 'required|exists:genders,id',
-            'vicinity' => 'required',
-            'barangay' => 'required',
-            'avatar' => 'required',
-            'info_status' => 'required',
-        );
-        
-        $validator = Validator::make($request->all(),$rules);
+        // Call the validation function
+        $validator = $this->validateProfileData($request);
         if($validator->fails()){
             return $validator->errors();
         }else{
@@ -288,5 +260,33 @@ class ProfileController extends Controller
         }
 
         return response()->json('Updated Successfully');
+    }
+
+    // FOR VALIDATION POST AND UPDATE
+    private function validateProfileData(Request $request){
+        $rules = array(
+            'livelihood_status_id' => 'required|numeric|exists:livelihood_statuses,id',
+            'family_income_range_id' => 'required|numeric|exists:family_income_ranges,id',
+            'tenurial_status_id' => 'required|numeric|exists:livelihood_statuses,id',
+            'kayabe_kard_type_id' => 'required|numeric|exists:kayabe_kard_types,id',
+            'dependent_range_id' => 'required|numeric|exists:dependent_ranges,id',
+            'total_dependents' => 'required|numeric|min:1',
+            'family_vulnerability' => 'required|in:0,1',
+            'medication' => 'required',
+            'remarks' => 'required',
+            'flood_exposure_id' => 'required|exists:flood_exposures,id',
+            'health_condition_id' => 'required|exists:health_conditions,id',
+            'sector_id' => 'required|exists:sectors,id',
+            'forename' => 'required',
+            'surname' => 'required',
+            'birthdate' => 'required',
+            'gender_id' => 'required|exists:genders,id',
+            'vicinity' => 'required',
+            'barangay' => 'required',
+            'avatar' => 'required',
+            'info_status' => 'required',
+        );
+        
+        return Validator::make($request->all(), $rules);
     }
 }
