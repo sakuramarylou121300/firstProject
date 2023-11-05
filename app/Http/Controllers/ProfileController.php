@@ -30,56 +30,9 @@ class ProfileController extends Controller
         }
 
         $citizen_resource = new CitizenResource($citizen);
-        // $profileFloodExposure = $citizen->profileFloodExposure;
 
         return response()->json($citizen_resource);
     }
-
-    // // get citizen by their pin
-    // public function getOneCitizen($pin) {
-    //     // get citizen first
-    //     $citizen = Citizen::where('pin', $pin)->first();
-        
-    //     if (!$citizen) {
-    //         return response()->json(['error' => 'Citizen not found'], 404);
-    //     }
-    
-    //     // now the profile
-    //     // Use the 'profile' relationship to retrieve the related Profile
-    //     $profile = $citizen->profiles;
-    
-    //     if (!$profile) {
-    //         return response()->json(['error' => 'Profile not found for this Citizen'], 404);
-    //     }
-    
-    //     // get profileFloodExposure with profile_id, profileFloodExposure and citizen share the same profile_id
-    //     $profileFloodExposure = $citizen->profileFloodExposure;
-
-    //     if ($profileFloodExposure->isEmpty()) {
-    //         return response()->json(['error' => 'No Flood Exposure records found for this Citizen'], 404);
-    //     }
-
-    //     // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
-    //     $profileHealthCondition = $citizen->profileHealthCondition;
-
-    //     if ($profileHealthCondition->isEmpty()) {
-    //         return response()->json(['error' => 'No Health Condition records found for this Citizen'], 404);
-    //     }
-
-    //     // get profileHealthCondition with profile_id, profileHealthCondition and citizen share the same profile_id
-    //     $profileSector = $citizen->profileSectors;
-
-    //     if ($profileSector->isEmpty()) {
-    //         return response()->json(['error' => 'No Sector records found for this Citizen'], 404);
-    //     }
-    //     if ($profileSector) {
-    //         return response()->json([
-    //             'citizen' => $citizen,
-    //         ]);
-    //     } else {
-    //         return response()->json(['error' => 'ProfileFloodExposure not found for this Profile'], 404);
-    //     }
-    // }
     
     // THIS IS TO STORE DATA
     public function addCitizen(Request $request){
@@ -102,6 +55,16 @@ class ProfileController extends Controller
             $profiles->remarks = $request->remarks;
             $profiles->save();
 
+            // Accept multiple input for flood_exposure_id, health_condition_id, and sector_id
+            $floodExposureIds = $request->input('flood_exposure_id', []);
+            $healthConditionIds = $request->input('health_condition_id', []);
+            $sectorIds = $request->input('sector_id', []);
+
+            // Attach related data to the profile using the sync method
+            $profiles->floodExposures()->sync($floodExposureIds);
+            $profiles->healthConditions()->sync($healthConditionIds);
+            $profiles->sectors()->sync($sectorIds);
+
         }
 
         // Retrieve the last inserted Profile's ID
@@ -110,39 +73,6 @@ class ProfileController extends Controller
         // to save the identity card no
         $profiles->identity_card_no = $lastInsertedProfileId;
         $profiles->save();
-
-        // accept multiple input for flood_exposure_id
-        if ($request->has('flood_exposure_id')) {
-            $floodExposureIds = $request->input('flood_exposure_id');
-            foreach ($floodExposureIds as $floodExposureId) {
-                $profileFloodExposure = new ProfileFloodExposure();
-                $profileFloodExposure->profile_id = $lastInsertedProfileId;
-                $profileFloodExposure->flood_exposure_id = $floodExposureId;
-                $profileFloodExposure->save();
-            }
-        }
-        
-        // accept multiple input for health_condition_id
-        if ($request->has('health_condition_id')) {
-            $healthConditionIds = $request->input('health_condition_id');
-            foreach ($healthConditionIds as $healthConditionId) {
-                $profileHealthCondition = new ProfileHealthCondition();
-                $profileHealthCondition->profile_id = $lastInsertedProfileId;
-                $profileHealthCondition->health_condition_id = $healthConditionId;
-                $profileHealthCondition->save();
-            }
-        }
-
-        // accept multiple input for sector_id
-        if ($request->has('sector_id')) {
-            $sectorIds = $request->input('sector_id');
-            foreach ($sectorIds as $sectorId) {
-                $profileSector = new ProfileSector();
-                $profileSector->profile_id = $lastInsertedProfileId;
-                $profileSector->sector_id = $sectorId;
-                $profileSector->save();
-            }
-        }
 
         // this is to store citizen
         // Get the current year as a string
@@ -198,49 +128,17 @@ class ProfileController extends Controller
             $profile->remarks = $request->remarks;
             $profile->save();
         }
+        // Update flood exposure with sync
+        $floodExposureIds = $request->input('flood_exposure_id', []);
+        $profile->floodExposures()->sync($floodExposureIds);
 
-        // update flood exposure with attach
-        if ($request->has('flood_exposure_id')) {
-            $floodExposureIds = $request->input('flood_exposure_id');
-        
-            // Find the existing profile by ID
-            $profiles = Profile::find($id);
-        
-            if (!$profiles) {
-                return response()->json('Profile not found', 404);
-            }
-        
-            // Use the sync method to update the flood exposures for the profile
-            $profiles->floodExposures()->sync($floodExposureIds);
-        } 
-        // update health condition with attach
-        if ($request->has('health_condition_id')) {
-            $healthConditionIds = $request->input('health_condition_id');
-        
-            // Find the existing profile by ID
-            $profiles = Profile::find($id);
-        
-            if (!$profiles) {
-                return response()->json('Profile not found', 404);
-            }
-        
-            // Use the sync method to update the flood exposures for the profile
-            $profiles->healthConditions()->sync($healthConditionIds);
-        }   
-        // update sector with attach
-        if ($request->has('sector_id')) {
-            $sectorIds = $request->input('sector_id');
-        
-            // Find the existing profile by ID
-            $profiles = Profile::find($id);
-        
-            if (!$profiles) {
-                return response()->json('Profile not found', 404);
-            }
-        
-            // Use the sync method to update the flood exposures for the profile
-            $profiles->sectors()->sync($sectorIds);
-        }   
+        // Update health condition with sync
+        $healthConditionIds = $request->input('health_condition_id', []);
+        $profile->healthConditions()->sync($healthConditionIds);
+
+        // Update sector with sync
+        $sectorIds = $request->input('sector_id', []);
+        $profile->sectors()->sync($sectorIds);  
 
         // Update the citizen record if it exists
         $citizens = Citizen::where('profile_id', $id)->first();
@@ -260,6 +158,25 @@ class ProfileController extends Controller
         }
 
         return response()->json('Updated Successfully');
+    }
+
+    // THIS IS TO SOFT DELETE CITIZEN, FOR NOW CITIZEN IS THE ONLY ONE BEING CALLED
+    public function deleteCitizen($id){
+
+        // Find the existing profile by ID
+        $profile = Profile::find($id);
+
+        if (!$profile) {
+            return response()->json('Profile not found', 404);
+        }
+
+        // Update the citizen record if it exists
+        $citizens = Citizen::where('profile_id', $id)->first();
+        if ($citizens) {
+            $citizens->delete();
+        }
+
+        return response()->json('Deleted Successfully');
     }
 
     // FOR VALIDATION POST AND UPDATE

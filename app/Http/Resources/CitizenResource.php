@@ -17,55 +17,50 @@ class CitizenResource extends JsonResource
         return [
             'id'=>$this->id,
             'pin'=>$this->pin,
+            'pin_year'=>$this->pin_year,
+            'pin_series'=>$this->pin_series,
+            'forename'=>$this->forename,
+            'midname'=>$this->midname,
+            'surname'=>$this->surname,
+            'suffix'=>$this->suffix,
+            'birthdate'=>$this->birthdate,
+            'gender_id' =>$this->genders->toArray(),
+            'vicinity'=>$this->vicinity,
+            'barangay'=>$this->barangay,
             'profile_id' => [
                 'id' => $this->profiles->id,
-                'livelihood_status_id' => [
-                    'id' => $this->profiles->livelihood_statuses->id,
-                    'name' => $this->profiles->livelihood_statuses->name,
-                ],
-                'family_income_range_id' => [
-                    'id' => $this->profiles->family_income_ranges->id,
-                    'name' => $this->profiles->family_income_ranges->name,
-                ],
-                'tenurial_status_id' => [
-                    'id' => $this->profiles->tenurial_statuses->id,
-                    'name' => $this->profiles->tenurial_statuses->name,
-                ],
-                'kayabe_kard_type_id' => [
-                    'id' => $this->profiles->kayabe_kard_types->id,
-                    'name' => $this->profiles->kayabe_kard_types->name,
-                ],
-                'dependent_range_id' => [
-                    'id' =>  $this->profiles->dependent_ranges->id,
-                    'name' =>  $this->profiles->dependent_ranges->name,
-                ],
+                // 'livelihood_status_id' => [
+                //     'id' => $this->profiles->livelihood_statuses->id,
+                //     'name' => $this->profiles->livelihood_statuses->name,
+                // ],
+                'livelihood_status_id' => $this->profiles->livelihood_statuses->toArray(),
+                'family_income_range_id' => $this->profiles->family_income_ranges->toArray(),
+                'tenurial_status_id' => $this->profiles->tenurial_statuses->toArray(),
+                'kayabe_kard_type_id' => $this->profiles->kayabe_kard_types->toArray(),
+                'dependent_range_id' => $this->profiles->dependent_ranges->toArray(),
             ],
+            'avatar'=>$this->avatar,
+            'info_status'=>$this->info_status,
             'profile_flood_exposure' => $this->profileFloodExposure->map(function ($item) {
                 return [
                     'profile_id' => $item->profile_id,
-                    'flood_exposure_id' => [
-                        'id' => $item->floodExposures->id,
-                        'name' => $item->floodExposures->name,
-                    ],
+                    'flood_exposure_id' => $item->floodExposures->toArray(),
+                    // 'flood_exposure_id' => [
+                    //     'id' => $item->floodExposures->id,
+                    //     'name' => $item->floodExposures->name,
+                    // ],
                 ];
             }),
             'profile_health_condition' => $this->profileHealthCondition->map(function ($item) {
                 return [
                     'profile_id' => $item->profile_id,
-                    'health_condition_id' => [
-                        'id' => $item->healthConditions->id,
-                        'name' => $item->healthConditions->name,
-                    ],
+                    'health_condition_id' => $item->healthConditions->toArray(),
                 ];
             }),
             'profile_sector' => $this->profileSectors->map(function ($item) {
                 return [
                     'profile_id' => $item->profile_id,
-                    'sector_id' => [
-                        'id' => $item->sectors->id,
-                        'code' => $item->sectors->code,
-                        'name' => $item->sectors->name,
-                    ],
+                    'sector_id' => $item->sectors->toArray(),
                 ];
             }),
 

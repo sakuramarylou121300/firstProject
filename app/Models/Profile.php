@@ -11,6 +11,8 @@ use App\Models\Citizen;
 use App\Models\FloodExposure;
 use App\Models\HealthCondition;
 use App\Models\Sector;
+use App\Models\Gender;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

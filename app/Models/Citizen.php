@@ -2,19 +2,25 @@
 
 namespace App\Models;
 
+use App\Models\Gender;
 use App\Models\Profile;
 use App\Models\ProfileFloodExposure;
 use App\Models\ProfileHealthCondition;
 use App\Models\ProfileSector;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Citizen extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     // all fillable
     protected $guarded = [];
+
+    public function genders(){
+        return $this->belongsTo(Gender::class, 'gender_id');
+    }
 
     // citizen belongs to profile
     public function profiles(){
