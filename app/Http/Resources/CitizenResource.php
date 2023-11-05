@@ -25,7 +25,7 @@ class CitizenResource extends JsonResource
             'suffix'=>$this->suffix,
             'birthdate'=>$this->birthdate,
             'gender_id' =>$this->genders->toArray(),
-            'vicinity'=>$this->vicinity,
+            'vicinity'=>$this->vicinity,    
             'barangay'=>$this->barangay,
             'profile_id' => [
                 'id' => $this->profiles->id,
