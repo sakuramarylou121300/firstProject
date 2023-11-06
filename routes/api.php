@@ -29,4 +29,4 @@ Route::get('getProfiles', [ProfileController::class, 'getProfiles']);
 Route::get('citizen/get/one/{pin}', [ProfileController::class, 'getOneCitizen']);
 Route::post('citizen/store', [ProfileController::class, 'addCitizen']);
 Route::put('citizen/update/{id}', [ProfileController::class, 'updateCitizen']);
-Route::put('citizen/delete/{id}', [ProfileController::class, 'deleteCitizen']);
+Route::delete('citizen/delete/{id}', [ProfileController::class, 'deleteCitizen']);
