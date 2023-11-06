@@ -10,9 +10,12 @@ class Sector extends Model
 {
     use HasFactory;
 
+<<<<<<< HEAD
+=======
     // all fillable
     protected $guarded = [];
 
+>>>>>>> 73cdac67364c90cf836419a5a92cdc12351212f3
     // sectors belongs to many profile
     public function profiles(){
         return $this->belongsToMany(Profile::class);

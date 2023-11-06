@@ -23,6 +23,26 @@ class Profile extends Model{
     protected $guarded = [];
     // disregard the updated_at and created_at
     public $timestamps = false;
+    
+    // profile has one citizen
+    public function citizens(){
+        return $this->hasOne(Citizen::class, 'profile_id');
+    }
+
+    // profiles belongs to many health condition
+    public function floodExposures(){
+        return $this->belongsToMany(FloodExposure::class, 'profile_flood_exposure');
+    }
+
+    // profiles belongs to many health condition
+    public function healthConditions(){
+        return $this->belongsToMany(HealthCondition::class, 'profile_health_condition');
+    }
+
+    // profiles belongs to many sector
+    public function sectors(){
+        return $this->belongsToMany(Sector::class);
+    }
 
     // profile has one livelihood status
     public function livelihood_statuses(){
@@ -48,25 +68,4 @@ class Profile extends Model{
     public function dependent_ranges(){
         return $this->belongsTo(DependentRange::class, 'dependent_range_id');
     }
-
-    // profile has one citizen
-    public function citizens(){
-        return $this->hasOne(Citizen::class, 'profile_id');
-    }
-
-    // profiles belongs to many health condition
-    public function floodExposures(){
-        return $this->belongsToMany(FloodExposure::class, 'profile_flood_exposure');
-    }
-
-    // profiles belongs to many health condition
-    public function healthConditions(){
-        return $this->belongsToMany(HealthCondition::class, 'profile_health_condition');
-    }
-
-    // profiles belongs to many sector
-    public function sectors(){
-        return $this->belongsToMany(Sector::class);
-    }
-
 }

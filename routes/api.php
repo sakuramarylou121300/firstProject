@@ -27,6 +27,8 @@ Route::get('getProfiles', [ProfileController::class, 'getProfiles']);
 
 // THIS IS THE ACTUAL TASK
 Route::get('citizen/get/one/{pin}', [ProfileController::class, 'getOneCitizen']);
+Route::get('citizen/get/one/{id}', [ProfileController::class, 'getOneCitizen']);
+Route::post('citizen/store', [ProfileController::class, 'addProfile']);
 Route::post('citizen/store', [ProfileController::class, 'addCitizen']);
 Route::put('citizen/update/{id}', [ProfileController::class, 'updateCitizen']);
 Route::delete('citizen/delete/{id}', [ProfileController::class, 'deleteCitizen']);
