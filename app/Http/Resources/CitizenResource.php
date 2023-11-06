@@ -63,6 +63,7 @@ class CitizenResource extends JsonResource
                     'sector_id' => $item->sectors->toArray(),
                 ];
             }),
+
         ];
     }
 }
