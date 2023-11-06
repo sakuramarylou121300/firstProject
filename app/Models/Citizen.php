@@ -21,6 +21,7 @@ class Citizen extends Model
     public function genders(){
         return $this->belongsTo(Gender::class, 'gender_id');
     }
+
     // citizen belongs to profile
     public function profiles(){
         return $this->belongsTo(Profile::class, 'profile_id');
