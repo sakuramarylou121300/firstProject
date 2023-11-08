@@ -12,8 +12,4 @@ class LivelihoodStatus extends Model
     protected $guarded = [];
     // disregard the updated_at and created_at
     public $timestamps = false;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 622f352ab3370715678069aef31c980f3053a057

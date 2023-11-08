@@ -80,8 +80,4 @@ class Profile extends Model{
     public function dependent_ranges(){
         return $this->belongsTo(DependentRange::class, 'dependent_range_id');
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 622f352ab3370715678069aef31c980f3053a057

@@ -26,8 +26,4 @@ class ProfileFloodExposure extends Model
 
 
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 622f352ab3370715678069aef31c980f3053a057
