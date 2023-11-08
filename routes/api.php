@@ -26,10 +26,9 @@ Route::get('/test', function(Request $request){
 Route::get('getProfiles', [ProfileController::class, 'getProfiles']);
 
 // THIS IS THE ACTUAL TASK
+Route::get('citizen/get/one/{pin}', [ProfileController::class, 'getOneCitizen']);
 Route::get('citizen/get/one/{id}', [ProfileController::class, 'getOneCitizen']);
-<<<<<<< HEAD
 Route::post('citizen/store', [ProfileController::class, 'addProfile']);
-=======
 Route::post('citizen/store', [ProfileController::class, 'addCitizen']);
->>>>>>> 73cdac67364c90cf836419a5a92cdc12351212f3
 Route::put('citizen/update/{id}', [ProfileController::class, 'updateCitizen']);
+Route::delete('citizen/delete/{id}', [ProfileController::class, 'deleteCitizen']);

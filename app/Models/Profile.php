@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
-<<<<<<< HEAD
+use App\Models\LivelihoodStatus;
+use App\Models\FamilyIncomeRange;
+use App\Models\TenurialStatus;
+use App\Models\KayabeKardType;
+use App\Models\DependentRange;
 use App\Models\Citizen;
-=======
->>>>>>> 73cdac67364c90cf836419a5a92cdc12351212f3
 use App\Models\FloodExposure;
 use App\Models\HealthCondition;
 use App\Models\Sector;
+use App\Models\Gender;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +23,18 @@ class Profile extends Model{
     protected $guarded = [];
     // disregard the updated_at and created_at
     public $timestamps = false;
+
+    // TO UPPER CASE
+    protected $uppercaseFields = ['identity_card_no', 'medication', 'remarks'];
+
+    public function setAttribute($key, $value)
+    {
+        if (in_array($key, $this->uppercaseFields)) {
+            $this->attributes[$key] = strtoupper($value);
+        } else {
+            parent::setAttribute($key, $value);
+        }
+    }
     
     // profile has one citizen
     public function citizens(){
@@ -40,19 +56,28 @@ class Profile extends Model{
         return $this->belongsToMany(Sector::class);
     }
 
-    // profiles belongs to many health condition
-    public function floodExposures(){
-        return $this->belongsToMany(FloodExposure::class, 'profile_flood_exposure');
+    // profile has one livelihood status
+    public function livelihood_statuses(){
+        return $this->belongsTo(LivelihoodStatus::class, 'livelihood_status_id');
     }
 
-    // profiles belongs to many health condition
-     public function healthConditions(){
-        return $this->belongsToMany(HealthCondition::class, 'profile_health_condition');
+    // profile has one family income range
+    public function family_income_ranges(){
+        return $this->belongsTo(FamilyIncomeRange::class, 'family_income_range_id');
     }
 
-    // profiles belongs to many sector
-    public function sectors(){
-        return $this->belongsToMany(Sector::class);
+    // profile has one tenurial status
+    public function tenurial_statuses(){
+        return $this->belongsTo(TenurialStatus::class, 'tenurial_status_id');
     }
 
+    // profile has one kayabe kard type
+    public function kayabe_kard_types(){
+        return $this->belongsTo(KayabeKardType::class, 'kayabe_kard_type_id');
+    }
+
+    // profile has one kayabe kard type
+    public function dependent_ranges(){
+        return $this->belongsTo(DependentRange::class, 'dependent_range_id');
+    }
 }

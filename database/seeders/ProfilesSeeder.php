@@ -18,6 +18,50 @@ class ProfilesSeeder extends Seeder
     {
         // // THIS IS FOR PROFILE AND CITIZEN
         $dummy = FakerFactory::create();
+        DB::table('dependent_ranges')->insert([
+            ['name' => 'TWO OR THREE'],
+            ['name' => 'MORE THAN 3'],
+        ]);
+        DB::table('family_income_ranges')->insert([
+            ['name' => 'ABOVE PT BUT LESS THAN 25K'],
+            ['name' => 'BELOW PT (14,498)'],
+        ]);
+        DB::table('flood_exposures')->insert([
+            ['name' => 'FLASH FOOD'],
+            ['name' => 'WEEK-LONG FLOODING'],
+            ['name' => 'PRONE TO EXPERIENCE DISPLACEMENT'],
+        ]);
+        DB::table('genders')->insert([
+            ['name' => 'MALE'],
+            ['name' => 'FEMALE'],
+            ['name' => 'LGBT'],
+            ['name' => 'UNKNOWN'],
+            ['name' => 'NOT APPLICABLE'],
+        ]);
+        DB::table('health_conditions')->insert([
+            ['name' => 'WITH ILLNESS NEEDS REGULAR MEDICATION'],
+            ['name' => 'BEDRIDDEN'],
+        ]);
+        DB::table('kayabe_kard_types')->insert([
+            ['name' => 'RED'],
+            ['name' => 'BLUE'],
+            ['name' => 'WHITE'],
+        ]);
+        DB::table('livelihood_statuses')->insert([
+            ['name' => 'BELOW MINIMUM/NOT SELF-SUFFICIENT'],
+            ['name' => 'ALMOST NONE'],
+        ]);
+        DB::table('sectors')->insert([
+            ['code' => 'DIALYSIS', 'name' => 'DIALYSIS/CHEMO PATIENT'],
+            ['code' => 'PWD', 'name' => 'PERSONS WITH DISABILITIES'],
+            ['code' => 'SC', 'name' => 'SENIOR CITIZEN'],
+            ['code' => 'SP', 'name' => 'SOLO PARENT'],
+        ]);
+        DB::table('tenurial_statuses')->insert([
+            ['name' => 'SHARER'],
+            ['RENT/RENT-TO-OWN'],
+            ['INFORMAL SETTLER'],
+        ]);
         for($i=0; $i<1000; $i++){
             // THIS IS FOR THE PROFILES
             $profileId = DB::table('profiles')->insertGetId([

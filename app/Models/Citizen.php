@@ -2,27 +2,40 @@
 
 namespace App\Models;
 
+use App\Models\Gender;
 use App\Models\Profile;
 use App\Models\ProfileFloodExposure;
 use App\Models\ProfileHealthCondition;
 use App\Models\ProfileSector;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Citizen extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     // all fillable
     protected $guarded = [];
 
-<<<<<<< HEAD
-     // citizen belongs to profile
-     public function profiles(){
-=======
+    // TO UPPER CASE
+    protected $uppercaseFields = ['forename', 'midname', 'surname', 'vicinity', 'barangay', 'info_status'];
+    
+    public function setAttribute($key, $value)
+    {
+        if (in_array($key, $this->uppercaseFields)) {
+            $this->attributes[$key] = strtoupper($value);
+        } else {
+            parent::setAttribute($key, $value);
+        }
+    }
+
+    public function genders(){
+        return $this->belongsTo(Gender::class, 'gender_id');
+    }
+
     // citizen belongs to profile
     public function profiles(){
->>>>>>> 73cdac67364c90cf836419a5a92cdc12351212f3
         return $this->belongsTo(Profile::class, 'profile_id');
     }
 
@@ -38,11 +51,7 @@ class Citizen extends Model
 
     // citizen has many health condition
     public function profileSectors(){
-<<<<<<< HEAD
-    return $this->hasMany(ProfileSector::class, 'profile_id'); 
-=======
     return $this->hasMany(ProfileSector::class, 'profile_id');
->>>>>>> 73cdac67364c90cf836419a5a92cdc12351212f3
     }
 
 }
