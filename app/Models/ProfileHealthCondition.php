@@ -22,4 +22,8 @@ class ProfileHealthCondition extends Model
     public function healthConditions(){
         return $this->belongsTo(HealthCondition::class, 'health_condition_id');
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 622f352ab3370715678069aef31c980f3053a057

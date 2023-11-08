@@ -22,4 +22,10 @@ class ProfileSector extends Model
     public function sectors(){
         return $this->belongsTo(Sector::class, 'sector_id');
     }
+<<<<<<< HEAD
 }
+=======
+}
+
+
+>>>>>>> 622f352ab3370715678069aef31c980f3053a057

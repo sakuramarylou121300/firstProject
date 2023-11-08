@@ -31,4 +31,8 @@ Route::get('citizen/get/one/{id}', [ProfileController::class, 'getOneCitizen']);
 Route::post('citizen/store', [ProfileController::class, 'addProfile']);
 Route::post('citizen/store', [ProfileController::class, 'addCitizen']);
 Route::put('citizen/update/{id}', [ProfileController::class, 'updateCitizen']);
+<<<<<<< HEAD
 Route::delete('citizen/delete/{id}', [ProfileController::class, 'deleteCitizen']);
+=======
+Route::delete('citizen/delete/{id}', [ProfileController::class, 'deleteCitizen']);
+>>>>>>> 622f352ab3370715678069aef31c980f3053a057

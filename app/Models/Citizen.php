@@ -18,6 +18,7 @@ class Citizen extends Model
     // all fillable
     protected $guarded = [];
 
+<<<<<<< HEAD
     // TO UPPER CASE
     protected $uppercaseFields = ['forename', 'midname', 'surname', 'vicinity', 'barangay', 'info_status'];
     
@@ -30,6 +31,8 @@ class Citizen extends Model
         }
     }
 
+=======
+>>>>>>> 622f352ab3370715678069aef31c980f3053a057
     public function genders(){
         return $this->belongsTo(Gender::class, 'gender_id');
     }
